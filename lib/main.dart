@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import './screen/products_overview_screen.dart';
+import './screen/product_detail_screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  static const String defRoute = '/';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +19,10 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.orange,
         fontFamily: 'Lato',
       ),
-      home: ProtuctsOverviewScreen(),
+      routes: {
+        MyApp.defRoute: (ctx) => ProtuctsOverviewScreen(),
+        ProductDetailScreen.nameRoute: (ctx) => ProductDetailScreen(),
+      },
     );
   }
 }

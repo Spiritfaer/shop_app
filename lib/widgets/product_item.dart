@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screen/product_detail_screen.dart';
+
 class ProductItem extends StatelessWidget {
   const ProductItem({
     Key key,
@@ -17,26 +19,39 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(13),
       child: GridTile(
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.cover,
+        child: GestureDetector(
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (ctx) => ProductDetailScreen(
+                        title: title,
+                      ))),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
         footer: GridTileBar(
           leading: IconButton(
             icon: Icon(
               Icons.favorite,
+              size: 18,
               color: Theme.of(context).accentColor,
             ),
             onPressed: () {},
           ),
           backgroundColor: Colors.black87,
-          title: Text(
-            title,
-            textAlign: TextAlign.center,
+          title: FittedBox(
+            //resizing text depends o free space
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
           ),
           trailing: IconButton(
             icon: Icon(
               Icons.shopping_cart,
+              size: 18,
               color: Theme.of(context).accentColor,
             ),
             onPressed: () {},

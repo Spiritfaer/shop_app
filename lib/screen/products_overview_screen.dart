@@ -5,6 +5,7 @@ import '../widgets/product_item.dart';
 
 class ProtuctsOverviewScreen extends StatelessWidget {
   // const ProtuctsOverviewScreen({Key key}) : super(key: key);
+  static const String nameRoute = '/products-overview-screen';
 
   final List<Product> loadedProdacts = [
     Product(
