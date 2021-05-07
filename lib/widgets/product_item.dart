@@ -25,7 +25,7 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           leading: Consumer<Product>(
-            builder: (context, prodact, child) => IconButton(
+            builder: (context, prodact, _) => IconButton(
               icon: Icon(
                 prodact.isFavorite ? Icons.favorite : Icons.favorite_border,
                 size: 18,
