@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/cart.dart';
-import '../widgets/cart_item.dart' as CItem;
+import '../providers/cart.dart' hide CartItem;
+import '../widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
   static const String nameRoute = '/cart-screen';
@@ -54,11 +54,14 @@ class CartScreen extends StatelessWidget {
               child: ListView.builder(
             itemBuilder: (ctx, index) {
               String key = cartItems.keys.elementAt(index);
-              return CItem.CartItem(
-                  id: cartItems[key].id,
-                  title: cartItems[key].title,
-                  quantity: cartItems[key].quantity,
-                  price: cartItems[key].price);
+              return CartItem(
+                id: cartItems[key].id,
+                title: cartItems[key].title,
+                quantity: cartItems[key].quantity,
+                price: cartItems[key].price,
+                deleteItem: cartData.deleteItem,
+                addItem: cartData.addItem,
+              );
             },
             itemCount: cartData.items.length,
           ))
