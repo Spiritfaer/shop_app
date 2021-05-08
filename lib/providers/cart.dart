@@ -22,7 +22,7 @@ class Cart with ChangeNotifier {
   }
 
   int get itemCount {
-    return _items.length;
+    // return _items.length;
     int sum = 0;
     if (_items != null && _items.isNotEmpty) {
       _items.forEach((key, value) {
@@ -30,6 +30,16 @@ class Cart with ChangeNotifier {
       });
     }
     return sum;
+  }
+
+  double get itemSum {
+    double sum = 0.0;
+    if (_items != null && _items.isNotEmpty) {
+      _items.forEach((key, value) {
+        sum += value.price * value.quantity;
+      });
+    }
+    return double.parse(sum.toStringAsFixed(2));
   }
 
   void addItem(String productId, double price, String title) {
