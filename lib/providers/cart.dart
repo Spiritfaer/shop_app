@@ -53,7 +53,8 @@ class Cart with ChangeNotifier {
                 quantity: item.quantity - 1,
               ));
     } else {
-      _items.removeWhere((key, item) => item.id == id);
+      // _items.removeWhere((key, item) => item.id == id);
+      _items.remove(id);
     }
     notifyListeners();
   }

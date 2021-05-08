@@ -26,21 +26,26 @@ class CartItem extends StatelessWidget {
         color: Colors.green,
         child: FittedBox(
           alignment: Alignment.centerLeft,
-          child: Text(
-            'ADD',
-            style: Theme.of(context).textTheme.headline1,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
           ),
         ),
       ),
       secondaryBackground: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        color: Colors.red,
+        color: Theme.of(context).errorColor,
         child: FittedBox(
           alignment: Alignment.centerRight,
-          child: Text(
-            quantity > 1 ? 'REMOVE' : 'DELETE',
-            style: Theme.of(context).textTheme.headline1,
-          ),
+          child: quantity > 1
+              ? Icon(
+                  Icons.remove,
+                  color: Colors.white,
+                )
+              : Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
         ),
       ),
       confirmDismiss: (direction) async {

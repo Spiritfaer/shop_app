@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.teal,
           accentColor: Colors.orange,
+          scaffoldBackgroundColor: Color.fromRGBO(255, 255, 230, 1),
           fontFamily: 'Lato',
           textTheme: Theme.of(context).textTheme.copyWith(
                 headline1: TextStyle(color: Colors.white),
