@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../screen/product_detail_screen.dart';
 import '../providers/protuct.dart';
+import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Product prod = Provider.of<Product>(context, listen: false);
+    final Cart cart = Provider.of<Cart>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(13),
@@ -25,16 +27,16 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           leading: Consumer<Product>(
-            builder: (context, prodact, _) => IconButton(
+            builder: (context, product, _) => IconButton(
               icon: Icon(
-                prodact.isFavorite ? Icons.favorite : Icons.favorite_border,
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
                 size: 18,
-                color: prodact.isFavorite
+                color: product.isFavorite
                     ? Theme.of(context).accentColor
                     : Colors.grey,
               ),
               onPressed: () {
-                prodact.toggleFavoriteStatus();
+                product.toggleFavoriteStatus();
               },
             ),
           ),
@@ -52,7 +54,9 @@ class ProductItem extends StatelessWidget {
               size: 18,
               color: Theme.of(context).accentColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(prod.id, prod.price, prod.title);
+            },
           ),
         ),
       ),
