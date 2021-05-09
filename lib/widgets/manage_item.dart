@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app1/screen/product_edit_screen.dart';
 
 class ManageItme extends StatelessWidget {
   const ManageItme({
@@ -23,14 +24,41 @@ class ManageItme extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, ProductEditScreen.nameRoute);
+                },
                 icon: Icon(
                   Icons.edit,
                   color: Theme.of(context).primaryColor,
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Are you sure?'),
+                      content:
+                          Text('Do you want to delete the product at all?!'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            print('Yes');
+                            Navigator.pop(context);
+                          },
+                          child: Text('Yes'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            print('No');
+                            Navigator.pop(context);
+                          },
+                          child: Text('No'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
                 icon: Icon(
                   Icons.delete,
                   color: Theme.of(context).errorColor,

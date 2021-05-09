@@ -54,4 +54,8 @@ class ProductsProvider with ChangeNotifier {
     _items.add(newProduct);
     notifyListeners();
   }
+
+  void deleteById(String id) {
+    _items.removeWhere((product) => product.id == id);
+  }
 }
