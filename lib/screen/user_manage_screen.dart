@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../widgets/menu_drawer.dart';
 import '../providers/products_provider.dart';
 import '../widgets/manage_item.dart';
+import '../screen/product_edit_screen.dart';
 
 class UserManageScreen extends StatelessWidget {
   static const String nameRoute = '/user-manage-screen';
@@ -20,11 +21,11 @@ class UserManageScreen extends StatelessWidget {
         title: Text(nameScreen),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              //to navigate to new product screen
-            },
-          )
+              icon: Icon(Icons.add),
+              onPressed: () {
+                //to navigate to new product screen
+                Navigator.pushNamed(context, ProductEditScreen.nameRoute);
+              })
         ],
       ),
       drawer: MenuDrawer(),

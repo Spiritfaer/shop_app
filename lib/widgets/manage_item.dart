@@ -25,7 +25,8 @@ class ManageItme extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, ProductEditScreen.nameRoute);
+                  //need go to edit
+                  // Navigator.pushNamed(context, ProductEditScreen.nameRoute);
                 },
                 icon: Icon(
                   Icons.edit,
