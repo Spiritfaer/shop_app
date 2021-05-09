@@ -16,13 +16,13 @@ class CartItem {
 
 class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
+  String _lastAddedId;
 
   Map<String, CartItem> get items {
     return {..._items};
   }
 
   int get itemCount {
-    // return _items.length;
     int sum = 0;
     if (_items != null && _items.isNotEmpty) {
       _items.forEach((key, value) {
@@ -53,15 +53,19 @@ class Cart with ChangeNotifier {
                 quantity: item.quantity - 1,
               ));
     } else {
-      // _items.removeWhere((key, item) => item.id == id);
       _items.remove(id);
     }
     notifyListeners();
   }
 
+  void deleteLastItem() {
+    deleteItem(_lastAddedId);
+    notifyListeners();
+  }
+
   void addItem(String productId, double price, String title) {
+    _lastAddedId = productId;
     if (_items == null || _items.containsKey(productId)) {
-      // change quantity
       _items.update(
         productId,
         (existingCartItem) => CartItem(

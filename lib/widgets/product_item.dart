@@ -42,7 +42,6 @@ class ProductItem extends StatelessWidget {
           ),
           backgroundColor: Colors.black87,
           title: FittedBox(
-            //resizing text depends o free space
             child: Text(
               prod.title,
               textAlign: TextAlign.center,
@@ -56,6 +55,22 @@ class ProductItem extends StatelessWidget {
             ),
             onPressed: () {
               cart.addItem(prod.id, prod.price, prod.title);
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Added item to the cart',
+                    textAlign: TextAlign.center,
+                  ),
+                  duration: Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.deleteLastItem();
+                    },
+                  ),
+                ),
+              );
             },
           ),
         ),
