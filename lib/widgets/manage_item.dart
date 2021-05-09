@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app1/screen/product_edit_screen.dart';
+
+import '../screen/product_edit_screen.dart';
 
 class ManageItme extends StatelessWidget {
   const ManageItme({
     Key key,
     @required this.title,
     @required this.imageUrl,
+    @required this.deleteItem,
     this.id,
   }) : super(key: key);
 
   final String id;
   final String title;
   final String imageUrl;
+  final Function deleteItem;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class ManageItme extends StatelessWidget {
                       actions: [
                         TextButton(
                           onPressed: () {
+                            deleteItem(id);
                             print('Yes');
                             Navigator.pop(context);
                           },

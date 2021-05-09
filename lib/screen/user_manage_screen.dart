@@ -23,7 +23,6 @@ class UserManageScreen extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                //to navigate to new product screen
                 Navigator.pushNamed(context, ProductEditScreen.nameRoute);
               })
         ],
@@ -35,6 +34,7 @@ class UserManageScreen extends StatelessWidget {
           id: prodData.items[index].id,
           title: prodData.items[index].title,
           imageUrl: prodData.items[index].imageUrl,
+          deleteItem: prodData.deleteById,
         ),
       ),
     );
