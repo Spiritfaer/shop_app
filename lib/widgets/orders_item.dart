@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shop_app1/widgets/product_item.dart';
 
 import '../providers/orders.dart' as ord;
 
-class OrderItem extends StatelessWidget {
+class OrderItem extends StatefulWidget {
   const OrderItem({
     Key key,
     @required this.orderItem,
@@ -12,28 +15,65 @@ class OrderItem extends StatelessWidget {
   final ord.OrderItem orderItem;
 
   @override
-  Widget build(BuildContext context) {
-    // orderItem.products;
-    // orderItem.id;
-    // orderItem.amount;
-    // orderItem.dateTime;
+  _OrderItemState createState() => _OrderItemState();
+}
 
+class _OrderItemState extends State<OrderItem> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final prods = widget.orderItem.products;
     return Card(
       margin: EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
             title: Text(
-              '\$${orderItem.amount}',
+              '\$${widget.orderItem.amount}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             subtitle: Text(
-              DateFormat('dd MM yyyy hh:mm').format(orderItem.dateTime),
+              DateFormat('dd/MM/yyyy hh:mm').format(widget.orderItem.dateTime),
             ),
             trailing: IconButton(
-              icon: Icon(Icons.expand_more),
-              onPressed: () {},
+              icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+              onPressed: () {
+                setState(() {
+                  _expanded = !_expanded;
+                });
+              },
             ),
           ),
+          if (_expanded)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              height: min(prods.length * 20.0 + 10.0, 100.0),
+              child: ListView.builder(
+                itemCount: prods.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${prods[index].title}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '${prods[index].quantity} x ${prods[index].price}',
+                        style: TextStyle(
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            )
         ],
       ),
     );

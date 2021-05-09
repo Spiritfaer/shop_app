@@ -29,6 +29,7 @@ class MenuDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: Icon(Icons.shop),
             title: Text(ProtuctsOverviewScreen.nameScreen),
             onTap: () {
               Navigator.pushReplacementNamed(
@@ -37,7 +38,9 @@ class MenuDrawer extends StatelessWidget {
               );
             },
           ),
+          Divider(),
           ListTile(
+            leading: Icon(Icons.payment),
             title: Text(OrderScreen.nameScreen),
             onTap: () {
               Navigator.pushReplacementNamed(
@@ -46,6 +49,7 @@ class MenuDrawer extends StatelessWidget {
               );
             },
           ),
+          Divider(),
         ],
       ),
     );
