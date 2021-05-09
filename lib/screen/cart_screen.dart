@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 import '../providers/cart.dart' hide CartItem;
 import '../widgets/cart_item.dart';
+import '../widgets/menu_drawer.dart';
 
 class CartScreen extends StatelessWidget {
   static const String nameRoute = '/cart-screen';
@@ -18,6 +19,7 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Your cart'),
       ),
+      drawer: MenuDrawer(),
       body: Column(
         children: [
           Card(
@@ -42,8 +44,8 @@ class CartScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Provider.of<Orders>(context, listen: false)
-                          .addOrder(cartData.items.values, cartData.itemSum);
+                      Provider.of<Orders>(context, listen: false).addOrder(
+                          cartData.items.values.toList(), cartData.itemSum);
                       cartData.clearCart();
                       Navigator.pop(context);
                     },

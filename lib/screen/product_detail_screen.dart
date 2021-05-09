@@ -7,6 +7,7 @@ import '../providers/cart.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   static const String nameRoute = '/product-detail-screen';
+  static const String nameScreen = 'Prodact details';
 
   Widget _buildDetail(BuildContext context, Product product, Function addItem) {
     return Column(
