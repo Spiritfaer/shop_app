@@ -92,7 +92,7 @@ class CartItem extends StatelessWidget {
           trailing: Chip(
             backgroundColor: Theme.of(context).primaryColor,
             label: Text(
-              '\$${price * quantity}',
+              '\$${(price * quantity).toStringAsFixed(2)}',
               style: TextStyle(
                 color: Theme.of(context).textTheme.headline1.color,
               ),

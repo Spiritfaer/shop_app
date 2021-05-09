@@ -32,6 +32,7 @@ class UserManageScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: prodData.items.length,
         itemBuilder: (context, index) => ManageItme(
+          id: prodData.items[index].id,
           title: prodData.items[index].title,
           imageUrl: prodData.items[index].imageUrl,
         ),

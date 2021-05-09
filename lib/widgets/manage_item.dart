@@ -6,8 +6,10 @@ class ManageItme extends StatelessWidget {
     Key key,
     @required this.title,
     @required this.imageUrl,
+    this.id,
   }) : super(key: key);
 
+  final String id;
   final String title;
   final String imageUrl;
 
@@ -25,8 +27,8 @@ class ManageItme extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  //need go to edit
-                  // Navigator.pushNamed(context, ProductEditScreen.nameRoute);
+                  Navigator.pushNamed(context, ProductEditScreen.nameRoute,
+                      arguments: id);
                 },
                 icon: Icon(
                   Icons.edit,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app1/providers/protuct.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/protuct.dart';
+import '../providers/products_provider.dart';
 
 class ProductEditScreen extends StatefulWidget {
   static const String nameRoute = '/product-edit-screen';
@@ -18,11 +21,38 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   final _imageUrlFocuNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   Product _editedProduct = Product.empty();
+  var _initValue = {
+    'title': '',
+    'description': '',
+    'price': '',
+    'imageUrl': '',
+  };
+  bool _isInit = true;
 
   @override
   void initState() {
     _imageUrlFocuNode.addListener(_updateImageUrl);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final prodId = ModalRoute.of(context).settings.arguments as String;
+      if (prodId != null) {
+        _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
+            .findById(prodId);
+        _initValue = {
+          'title': _editedProduct.title,
+          'description': _editedProduct.description,
+          'price': _editedProduct.price.toString(),
+          'imageUrl': '',
+        };
+        _imageUrlController.text = _editedProduct.imageUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -45,7 +75,14 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
     }
-    print(_editedProduct.toString());
+    if (_editedProduct.id != null) {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .updateProduct(_editedProduct.id, _editedProduct);
+    } else {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .addProduct(_editedProduct);
+    }
+    Navigator.pop(context);
   }
 
   @override
@@ -68,6 +105,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: _initValue['title'],
                   decoration: InputDecoration(labelText: 'Title'),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -84,6 +122,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   },
                 ),
                 TextFormField(
+                    initialValue: _initValue['price'],
                     decoration: InputDecoration(labelText: 'Price'),
                     validator: (value) {
                       if (value.isEmpty) {
@@ -110,6 +149,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       );
                     }),
                 TextFormField(
+                  initialValue: _initValue['description'],
                   decoration: InputDecoration(labelText: 'Description'),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -155,6 +195,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                               )),
                     Expanded(
                       child: TextFormField(
+                        // initialValue: _initValue['imageUrl'],
                         decoration: InputDecoration(labelText: 'Image URL'),
                         validator: (value) {
                           if (value.isEmpty) {

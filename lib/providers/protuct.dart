@@ -25,6 +25,15 @@ class Product with ChangeNotifier {
         this.imageUrl = null,
         this.isFavorite = false;
 
+  ///Get a copy Product class withoud ID!
+  Product.copy(Product prod)
+      : this.id = null,
+        this.title = prod.title,
+        this.description = prod.description,
+        this.price = prod.price,
+        this.imageUrl = prod.imageUrl,
+        this.isFavorite = prod.isFavorite;
+
   Product copyWith({
     String id,
     String title,
@@ -38,6 +47,7 @@ class Product with ChangeNotifier {
       description: description ?? this.description,
       price: price ?? this.price,
       imageUrl: imageUrl ?? this.imageUrl,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
