@@ -54,12 +54,35 @@ class CartItem extends StatelessWidget {
           return false;
         }
         if (direction == DismissDirection.endToStart) {
-          deleteItem(id);
           if (quantity > 1) {
+            deleteItem(id);
             return false;
+          } else {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text('Are you sure?'),
+                content: Text('Do you want to remove the item from the cart?'),
+                actions: [
+                  TextButton(
+                    child: Text('Yes'),
+                    onPressed: () {
+                      deleteItem(id);
+                      Navigator.of(ctx).pop(true);
+                    },
+                  ),
+                  TextButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop(false);
+                    },
+                  )
+                ],
+              ),
+            );
           }
-          return true;
         }
+        return false;
       },
       key: Key(id),
       child: Card(

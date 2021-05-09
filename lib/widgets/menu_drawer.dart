@@ -3,13 +3,10 @@ import 'package:shop_app1/screen/product_detail_screen.dart';
 
 import '../screen/products_overview_screen.dart';
 import '../screen/orders_screen.dart';
+import '../screen/user_manage_screen.dart';
 
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({Key key}) : super(key: key);
-
-// MyApp.defRoute: (ctx) => ProtuctsOverviewScreen(),
-// ProductDetailScreen.nameRoute: (ctx) => ProductDetailScreen(),
-// CartScreen.nameRoute: (ctx) => CartScreen(),
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +43,17 @@ class MenuDrawer extends StatelessWidget {
               Navigator.pushReplacementNamed(
                 context,
                 OrderScreen.nameRoute,
+              );
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text(UserManageScreen.nameScreen),
+            onTap: () {
+              Navigator.pushReplacementNamed(
+                context,
+                UserManageScreen.nameRoute,
               );
             },
           ),
