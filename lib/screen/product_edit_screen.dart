@@ -52,11 +52,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
         _imageUrlController.text = _editedProduct.imageUrl;
       }
     }
-    //TODO delete that init, becouse it only for testing!!!
-    if (true) {
-      _imageUrlController.text =
-          'https://img.jakpost.net/c/2019/03/02/2019_03_02_66706_1551461528._large.jpg';
-    }
     _isInit = false;
     super.didChangeDependencies();
   }
@@ -86,7 +81,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       _isLoading = true;
     });
     if (_editedProduct.id != null) {
-      Provider.of<ProductsProvider>(context, listen: false)
+      await Provider.of<ProductsProvider>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
       setState(() {
         // _isLoading = false;
