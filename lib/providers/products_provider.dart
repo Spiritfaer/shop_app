@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app1/models/http_exception.dart';
 
 import 'protuct.dart';
 
@@ -108,9 +109,20 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void deleteById(String id) {
-    _items.removeWhere((product) => product.id == id);
-    notifyListeners();
+  Future<void> deleteById(String id) async {
+    try {
+      final url = Uri.https(
+          'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
+          '/products/$id.json');
+      final response = await http.delete(url);
+      if (response.statusCode < 400) {
+        _items.removeWhere((product) => product.id == id);
+      } else {
+        throw HttpException('Object didn\'t delete');
+      }
+    } finally {
+      notifyListeners();
+    }
   }
 
   Future<void> updateProduct(String id, Product updatedProduct) async {

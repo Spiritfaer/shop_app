@@ -18,6 +18,7 @@ class ManageItme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldM = ScaffoldMessenger.of(context);
     return Card(
       elevation: 2,
       shadowColor: Theme.of(context).primaryColor,
@@ -48,10 +49,21 @@ class ManageItme extends StatelessWidget {
                           Text('Do you want to delete the product at all?!'),
                       actions: [
                         TextButton(
-                          onPressed: () {
-                            deleteItem(id);
-                            print('Yes');
-                            Navigator.pop(context);
+                          onPressed: () async {
+                            try {
+                              await deleteItem(id);
+                            } catch (error) {
+                              scaffoldM.showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    error.toString(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            } finally {
+                              Navigator.pop(context);
+                            }
                           },
                           child: Text('Yes'),
                         ),
