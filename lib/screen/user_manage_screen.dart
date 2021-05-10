@@ -12,6 +12,11 @@ class UserManageScreen extends StatelessWidget {
 
   const UserManageScreen({Key key}) : super(key: key);
 
+  Future<void> _refreshProductList(BuildContext context) async {
+    await Provider.of<ProductsProvider>(context, listen: false)
+        .fetchProductsData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final ProductsProvider prodData = Provider.of<ProductsProvider>(context);
@@ -28,13 +33,16 @@ class UserManageScreen extends StatelessWidget {
         ],
       ),
       drawer: MenuDrawer(),
-      body: ListView.builder(
-        itemCount: prodData.items.length,
-        itemBuilder: (context, index) => ManageItme(
-          id: prodData.items[index].id,
-          title: prodData.items[index].title,
-          imageUrl: prodData.items[index].imageUrl,
-          deleteItem: prodData.deleteById,
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProductList(context),
+        child: ListView.builder(
+          itemCount: prodData.items.length,
+          itemBuilder: (context, index) => ManageItme(
+            id: prodData.items[index].id,
+            title: prodData.items[index].title,
+            imageUrl: prodData.items[index].imageUrl,
+            deleteItem: prodData.deleteById,
+          ),
         ),
       ),
     );
