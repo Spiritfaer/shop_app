@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'protuct.dart';
 
 class ProductsProvider with ChangeNotifier {
+  static const String mainUrl =
+      'https://shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app/';
   List<Product> _items = [
     Product(
       id: 'p1',
@@ -50,11 +55,28 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  void addProduct(Product product) {
-    final newProduct =
-        Product.copy(product).copyWith(id: DateTime.now().toString());
-    _items.add(newProduct);
-    notifyListeners();
+  Future<void> addProduct(Product product) {
+    final url = Uri.https(
+        'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
+        '/products.json');
+    return http
+        .post(
+      url,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isFavorite,
+      }),
+    )
+        .then((response) {
+      final newProduct = Product.copy(product)
+          .copyWith(id: json.decode(response.body)['name']);
+      //-----
+      _items.add(newProduct);
+      notifyListeners();
+    });
   }
 
   void deleteById(String id) {
