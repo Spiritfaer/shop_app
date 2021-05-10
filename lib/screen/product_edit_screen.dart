@@ -105,15 +105,16 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
               content: Text('Somethong went wrong. This product didn\'t save!'),
               actions: [
                 TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Ok',
-                      style: TextStyle(
-                        color: Theme.of(context).errorColor,
-                      ),
-                    ))
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Ok',
+                    style: TextStyle(
+                      color: Theme.of(context).errorColor,
+                    ),
+                  ),
+                ),
               ],
             );
           },
