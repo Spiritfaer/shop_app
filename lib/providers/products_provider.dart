@@ -58,7 +58,7 @@ class ProductsProvider with ChangeNotifier {
   Future<void> addProduct(Product product) {
     final url = Uri.https(
         'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json');
+        '/products');
     return http
         .post(
       url,
@@ -76,6 +76,8 @@ class ProductsProvider with ChangeNotifier {
       //-----
       _items.add(newProduct);
       notifyListeners();
+    }).catchError((error) {
+      throw error;
     });
   }
 

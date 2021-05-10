@@ -88,11 +88,39 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     if (_editedProduct.id != null) {
       Provider.of<ProductsProvider>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
+      setState(() {
+        // _isLoading = false;
+      });
       Navigator.pop(context);
     } else {
       Provider.of<ProductsProvider>(context, listen: false)
           .addProduct(_editedProduct)
-          .then((_) {
+          .catchError((error) async {
+        return showDialog<Null>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error!'),
+              content: Text('Somethong went wrong. This product didn\'t save!'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Ok',
+                      style: TextStyle(
+                        color: Theme.of(context).errorColor,
+                      ),
+                    ))
+              ],
+            );
+          },
+        );
+      }).then((_) {
+        setState(() {
+          // _isLoading = false;
+        });
         Navigator.pop(context);
       });
     }
