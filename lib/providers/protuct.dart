@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:shop_app1/models/http_exception.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -51,9 +55,33 @@ class Product with ChangeNotifier {
     );
   }
 
-  void toggleFavoriteStatus() {
+  void _toggleHelper(bool newStatus) {
+    isFavorite = newStatus;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus() async {
+    bool curStatus = isFavorite;
+
+    final url = Uri.https(
+      'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
+      '/products/$id.json',
+    );
+
     isFavorite = !isFavorite;
     notifyListeners();
+
+    try {
+      final response = await http.patch(url,
+          body: json.encode({
+            'isFavorite': isFavorite,
+          }));
+      if (response.statusCode >= 400) {
+        _toggleHelper(curStatus);
+      }
+    } catch (error) {
+      _toggleHelper(curStatus);
+    }
   }
 
   @override
