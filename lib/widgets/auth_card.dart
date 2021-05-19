@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app1/screen/auth_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../screen/auth_screen.dart';
+import '../screen/products_overview_screen.dart';
+import '../models/http_exception.dart';
+import '../providers/auth.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard({Key key}) : super(key: key);
@@ -23,7 +28,16 @@ class _AuthCardState extends State<AuthCard> {
     });
   }
 
-  void _submit() {
+  void _showErrorMessage(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        duration: Duration(seconds: 4),
+      ),
+    );
+  }
+
+  void _submit() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -31,10 +45,23 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      //TODO Log user in method
-    } else {
-      //TODO SingUp user method
+    try {
+      if (_authMode == AuthMode.Login) {
+        await Provider.of<Auth>(context, listen: false).login(
+          _authData['email'],
+          _authData['password'],
+        );
+      } else {
+        await Provider.of<Auth>(context, listen: false).signup(
+          _authData['email'],
+          _authData['password'],
+        );
+      }
+      Navigator.pushReplacementNamed(context, ProtuctsOverviewScreen.nameRoute);
+    } on HttpException catch (error) {
+      _showErrorMessage(error.userMessage);
+    } catch (error) {
+      _showErrorMessage('please try to connect later');
     }
     setState(() {
       _isLoading = false;

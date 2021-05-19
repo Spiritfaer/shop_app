@@ -62,6 +62,9 @@ class ProductsProvider with ChangeNotifier {
         '/products.json');
     try {
       final response = await http.get(url);
+      if (response.statusCode >= 400) {
+        throw HttpException('Error status in porduct provider');
+      }
       final fetchData = json.decode(response.body) as Map<String, dynamic>;
       if (fetchData == null) {
         return;
@@ -82,7 +85,6 @@ class ProductsProvider with ChangeNotifier {
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
-      print(error);
       throw error;
     }
   }

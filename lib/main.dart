@@ -11,6 +11,7 @@ import './screen/auth_screen.dart';
 import './providers/products_provider.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
+import './providers/auth.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
+        ChangeNotifierProvider(
           create: (ctx) => ProductsProvider(),
         ),
         ChangeNotifierProvider(
@@ -33,27 +37,30 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Orders(),
         )
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.teal,
-          accentColor: Colors.orange,
-          scaffoldBackgroundColor: Color.fromRGBO(255, 255, 230, 1),
-          fontFamily: 'Lato',
-          textTheme: Theme.of(context).textTheme.copyWith(
-                headline1: TextStyle(color: Colors.white),
-              ),
+      child: Consumer<Auth>(
+        builder: (ctx, auth, child) => MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.teal,
+            accentColor: Colors.orange,
+            scaffoldBackgroundColor: Color.fromRGBO(255, 255, 230, 1),
+            fontFamily: 'Lato',
+            textTheme: Theme.of(context).textTheme.copyWith(
+                  headline1: TextStyle(color: Colors.white),
+                ),
+          ),
+          routes: {
+            MyApp.defRoute: (ctx) =>
+                auth.isAuth ? ProtuctsOverviewScreen() : AuthScreen(),
+            ProtuctsOverviewScreen.nameRoute: (ctx) => ProtuctsOverviewScreen(),
+            ProductDetailScreen.nameRoute: (ctx) => ProductDetailScreen(),
+            CartScreen.nameRoute: (ctx) => CartScreen(),
+            OrderScreen.nameRoute: (ctx) => OrderScreen(),
+            UserManageScreen.nameRoute: (ctx) => UserManageScreen(),
+            ProductEditScreen.nameRoute: (ctx) => ProductEditScreen(),
+            AuthScreen.nameRoute: (ctx) => AuthScreen(),
+          },
         ),
-        routes: {
-          MyApp.defRoute: (ctx) => AuthScreen(),
-          ProtuctsOverviewScreen.nameRoute: (ctx) => ProtuctsOverviewScreen(),
-          ProductDetailScreen.nameRoute: (ctx) => ProductDetailScreen(),
-          CartScreen.nameRoute: (ctx) => CartScreen(),
-          OrderScreen.nameRoute: (ctx) => OrderScreen(),
-          UserManageScreen.nameRoute: (ctx) => UserManageScreen(),
-          ProductEditScreen.nameRoute: (ctx) => ProductEditScreen(),
-          AuthScreen.nameRoute: (ctx) => AuthScreen(),
-        },
       ),
     );
   }
