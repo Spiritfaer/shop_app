@@ -10,10 +10,8 @@ class Auth with ChangeNotifier {
   String _userId;
   final String _API_KEY = 'AIzaSyAWm-WI9BM_kiKj75pMAgITG_s7tvD2FsU';
 
-  bool get isAuth {
-    return token != null;
-  }
-
+  bool get isAuth => token != null;
+  String get user => _userId;
   String get token {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
@@ -47,7 +45,7 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
-      _token = responseData['responseData'];
+      _token = responseData['idToken'];
       _userId = responseData['localId'];
       _expiryDate = DateTime.now().add(
         Duration(

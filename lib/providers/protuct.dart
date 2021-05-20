@@ -60,22 +60,27 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String authToken, String userId) async {
     bool curStatus = isFavorite;
 
     final url = Uri.https(
       'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
-      '/products/$id.json',
+      '/userFavorites/$userId/$id.json',
+      {
+        'auth': authToken,
+      },
     );
 
     isFavorite = !isFavorite;
     notifyListeners();
 
     try {
-      final response = await http.patch(url,
-          body: json.encode({
-            'isFavorite': isFavorite,
-          }));
+      final response = await http.put(
+        url,
+        body: json.encode(
+          isFavorite,
+        ),
+      );
       if (response.statusCode >= 400) {
         _toggleHelper(curStatus);
       }

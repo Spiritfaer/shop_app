@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screen/product_detail_screen.dart';
 import '../providers/protuct.dart';
+import '../providers/auth.dart';
 import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
@@ -10,7 +11,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final Product prod = Provider.of<Product>(context, listen: false);
     final Cart cart = Provider.of<Cart>(context, listen: false);
-
+    final Auth auth = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(13),
       child: GridTile(
@@ -36,7 +37,7 @@ class ProductItem extends StatelessWidget {
                     : Colors.grey,
               ),
               onPressed: () {
-                product.toggleFavoriteStatus();
+                product.toggleFavoriteStatus(auth.token, auth.user);
               },
             ),
           ),

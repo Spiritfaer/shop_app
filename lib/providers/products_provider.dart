@@ -7,8 +7,8 @@ import 'package:shop_app1/models/http_exception.dart';
 import 'protuct.dart';
 
 class ProductsProvider with ChangeNotifier {
-  static const String mainUrl =
-      'https://shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app/';
+  final String mainUrl =
+      'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app';
   List<Product> _items = [
     // Product(
     //   id: 'p1',
@@ -44,6 +44,15 @@ class ProductsProvider with ChangeNotifier {
     // ),
   ];
 
+  final String authToken;
+  final String userId;
+
+  ProductsProvider()
+      : authToken = null,
+        userId = null;
+
+  ProductsProvider.update(this.authToken, this.userId, item) : _items = item;
+
   List<Product> get items {
     return [..._items];
   }
@@ -57,9 +66,13 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProductsData() async {
-    final url = Uri.https(
-        'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json');
+    var url = Uri.https(
+      mainUrl,
+      '/products.json',
+      {
+        'auth': authToken,
+      },
+    );
     try {
       final response = await http.get(url);
       if (response.statusCode >= 400) {
@@ -69,6 +82,17 @@ class ProductsProvider with ChangeNotifier {
       if (fetchData == null) {
         return;
       }
+
+      url = Uri.https(
+        mainUrl,
+        '/userFavorites/$userId.json',
+        {
+          'auth': authToken,
+        },
+      );
+      final favoriteResponse = await http.get(url);
+      final favoditeData = json.decode(favoriteResponse.body);
+
       List<Product> loadedProducts = [];
       fetchData.forEach((prodId, prodData) {
         loadedProducts.add(
@@ -78,21 +102,28 @@ class ProductsProvider with ChangeNotifier {
             description: prodData['description'],
             imageUrl: prodData['imageUrl'],
             price: prodData['price'],
-            isFavorite: prodData['isFavorite'],
+            isFavorite:
+                favoditeData == null ? false : favoditeData[prodId] ?? false,
           ),
         );
       });
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
+      //TODO add an error handler at the call site
+      print(error);
       throw error;
     }
   }
 
   Future<void> addProduct(Product product) async {
     final url = Uri.https(
-        'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json');
+      mainUrl,
+      '/products.json',
+      {
+        'auth': authToken,
+      },
+    );
     try {
       final response = await http.post(
         url,
@@ -101,7 +132,7 @@ class ProductsProvider with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product.copy(product)
@@ -117,8 +148,12 @@ class ProductsProvider with ChangeNotifier {
   Future<void> deleteById(String id) async {
     try {
       final url = Uri.https(
-          'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
-          '/products/$id.json');
+        mainUrl,
+        '/products/$id.json',
+        {
+          'auth': authToken,
+        },
+      );
       final response = await http.delete(url);
       if (response.statusCode < 400) {
         _items.removeWhere((product) => product.id == id);
@@ -134,8 +169,12 @@ class ProductsProvider with ChangeNotifier {
     final productIndex = _items.indexWhere((prod) => prod.id == id);
     if (productIndex >= 0) {
       final url = Uri.https(
-          'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app',
-          '/products/$id.json');
+        mainUrl,
+        '/products/$id.json',
+        {
+          'auth': authToken,
+        },
+      );
       try {
         await http.patch(url,
             body: json.encode({
