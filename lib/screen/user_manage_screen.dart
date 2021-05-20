@@ -14,13 +14,11 @@ class UserManageScreen extends StatelessWidget {
 
   Future<void> _refreshProductList(BuildContext context) async {
     await Provider.of<ProductsProvider>(context, listen: false)
-        .fetchProductsData();
+        .fetchProductsData(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final ProductsProvider prodData = Provider.of<ProductsProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(nameScreen),
@@ -33,17 +31,31 @@ class UserManageScreen extends StatelessWidget {
         ],
       ),
       drawer: MenuDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProductList(context),
-        child: ListView.builder(
-          itemCount: prodData.items.length,
-          itemBuilder: (context, index) => ManageItme(
-            id: prodData.items[index].id,
-            title: prodData.items[index].title,
-            imageUrl: prodData.items[index].imageUrl,
-            deleteItem: prodData.deleteById,
-          ),
-        ),
+      body: FutureBuilder(
+        future: Provider.of<ProductsProvider>(context, listen: false)
+            .fetchProductsData(true),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Consumer<ProductsProvider>(
+              builder: (context, prodData, child) => RefreshIndicator(
+                onRefresh: () => _refreshProductList(context),
+                child: ListView.builder(
+                  itemCount: prodData.items.length,
+                  itemBuilder: (context, index) => ManageItme(
+                    id: prodData.items[index].id,
+                    title: prodData.items[index].title,
+                    imageUrl: prodData.items[index].imageUrl,
+                    deleteItem: prodData.deleteById,
+                  ),
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

@@ -65,14 +65,17 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchProductsData() async {
-    var url = Uri.https(
-      mainUrl,
-      '/products.json',
-      {
-        'auth': authToken,
-      },
-    );
+  Future<void> fetchProductsData([bool filterByUser = false]) async {
+    var queryParameters = {
+      'auth': authToken,
+    };
+    if (filterByUser) {
+      queryParameters.addAll({
+        'orderBy': json.encode('creatorId'),
+        'equalTo': json.encode(userId),
+      });
+    }
+    var url = Uri.https(mainUrl, '/products.json', queryParameters);
     try {
       final response = await http.get(url);
       if (response.statusCode >= 400) {
