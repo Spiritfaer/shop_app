@@ -1,14 +1,16 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app1/models/http_exception.dart';
 
 class Auth with ChangeNotifier {
+  final String _API_KEY = 'AIzaSyAWm-WI9BM_kiKj75pMAgITG_s7tvD2FsU';
   String _token;
   DateTime _expiryDate;
   String _userId;
-  final String _API_KEY = 'AIzaSyAWm-WI9BM_kiKj75pMAgITG_s7tvD2FsU';
+  Timer _authTimer;
 
   bool get isAuth => token != null;
   String get user => _userId;
@@ -52,6 +54,7 @@ class Auth with ChangeNotifier {
           seconds: int.parse(responseData['expiresIn']),
         ),
       );
+      _autoLogout();
       notifyListeners();
     } catch (error) {
       throw error;
@@ -66,5 +69,24 @@ class Auth with ChangeNotifier {
   Future<void> login(String email, String password) async {
     final requistSignInWithPassword = '/v1/accounts:signInWithPassword';
     return _authentificate(email, password, requistSignInWithPassword);
+  }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    if (_authTimer != null) {
+      _authTimer.cancel();
+      _authTimer = null;
+    }
+    notifyListeners();
+  }
+
+  void _autoLogout() {
+    if (_authTimer != null) {
+      _authTimer.cancel();
+    }
+    final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 }

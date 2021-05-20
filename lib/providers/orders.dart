@@ -25,22 +25,29 @@ class Orders with ChangeNotifier {
       'shop-lessons-flutter-udemy-default-rtdb.europe-west1.firebasedatabase.app';
   List<OrderItem> _orders = [];
   final String authToken;
+  final String userId;
 
-  Orders() : authToken = null;
-  Orders.update(this.authToken, orders) : _orders = orders;
+  Orders()
+      : authToken = null,
+        userId = null;
+  Orders.update(this.authToken, this.userId, orders) : _orders = orders;
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
-  Future<void> fetchAndSetorders() async {
-    final url = Uri.https(
-      mainUrl,
-      '/orders.json',
-      {
-        'auth': authToken,
-      },
-    );
+  Future<void> fetchAndSetorders([bool filterByUser = false]) async {
+    final queryParameters = {
+      'auth': authToken,
+    };
+    if (filterByUser) {
+      queryParameters.addAll({
+        'orderBy': json.encode('userId'),
+        'equalTo': json.encode(userId),
+      });
+    }
+
+    final url = Uri.https(mainUrl, '/orders.json', queryParameters);
     final response = await http.get(url);
     List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -79,6 +86,7 @@ class Orders with ChangeNotifier {
     try {
       final response = await http.post(url,
           body: json.encode({
+            'userId': userId,
             'amount': totalAmount,
             'dateTime': timeStamp.toIso8601String(),
             'products': cartProducts

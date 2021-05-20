@@ -42,34 +42,41 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Orders(),
           update: (ctx, auth, previousOrders) => Orders.update(
             auth.token,
+            auth.user,
             previousOrders == null ? [] : previousOrders.orders,
           ),
         )
       ],
       child: Consumer<Auth>(
-        builder: (ctx, auth, child) => MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.teal,
-            accentColor: Colors.orange,
-            scaffoldBackgroundColor: Color.fromRGBO(255, 255, 230, 1),
-            fontFamily: 'Lato',
-            textTheme: Theme.of(context).textTheme.copyWith(
-                  headline1: TextStyle(color: Colors.white),
-                ),
-          ),
-          routes: {
-            MyApp.defRoute: (ctx) =>
-                auth.isAuth ? ProtuctsOverviewScreen() : AuthScreen(),
-            ProtuctsOverviewScreen.nameRoute: (ctx) => ProtuctsOverviewScreen(),
-            ProductDetailScreen.nameRoute: (ctx) => ProductDetailScreen(),
-            CartScreen.nameRoute: (ctx) => CartScreen(),
-            OrderScreen.nameRoute: (ctx) => OrderScreen(),
-            UserManageScreen.nameRoute: (ctx) => UserManageScreen(),
-            ProductEditScreen.nameRoute: (ctx) => ProductEditScreen(),
-            AuthScreen.nameRoute: (ctx) => AuthScreen(),
-          },
-        ),
+        builder: (ctx, auth, child) {
+          ifAuth(targetScreen) => auth.isAuth ? targetScreen : AuthScreen();
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.teal,
+              accentColor: Colors.orange,
+              scaffoldBackgroundColor: Color.fromRGBO(255, 255, 230, 1),
+              fontFamily: 'Lato',
+              textTheme: Theme.of(context).textTheme.copyWith(
+                    headline1: TextStyle(color: Colors.white),
+                  ),
+            ),
+            routes: {
+              MyApp.defRoute: (ctx) =>
+                  auth.isAuth ? ProtuctsOverviewScreen() : AuthScreen(),
+              ProtuctsOverviewScreen.nameRoute: (ctx) =>
+                  ifAuth(ProtuctsOverviewScreen()),
+              ProductDetailScreen.nameRoute: (ctx) =>
+                  ifAuth(ProductDetailScreen()),
+              CartScreen.nameRoute: (ctx) => ifAuth(CartScreen()),
+              OrderScreen.nameRoute: (ctx) => ifAuth(OrderScreen()),
+              UserManageScreen.nameRoute: (ctx) => ifAuth(UserManageScreen()),
+              ProductEditScreen.nameRoute: (ctx) => ifAuth(ProductEditScreen()),
+              AuthScreen.nameRoute: (ctx) => AuthScreen(),
+            },
+          );
+        },
       ),
     );
   }

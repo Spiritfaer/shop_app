@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app1/screen/product_detail_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app1/screen/auth_screen.dart';
 
+import '../providers/auth.dart';
 import '../screen/products_overview_screen.dart';
 import '../screen/orders_screen.dart';
 import '../screen/user_manage_screen.dart';
@@ -58,6 +60,14 @@ class MenuDrawer extends StatelessWidget {
             },
           ),
           Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, AuthScreen.nameRoute);
+              Provider.of<Auth>(context, listen: false).logout();
+            },
+          ),
         ],
       ),
     );
