@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app1/screen/auth_screen.dart';
 
 import '../providers/auth.dart';
+import '../helpers/custom_route.dart';
 import '../screen/products_overview_screen.dart';
 import '../screen/orders_screen.dart';
 import '../screen/user_manage_screen.dart';
@@ -42,10 +43,9 @@ class MenuDrawer extends StatelessWidget {
             leading: Icon(Icons.payment),
             title: Text(OrderScreen.nameScreen),
             onTap: () {
-              Navigator.pushReplacementNamed(
-                context,
-                OrderScreen.nameRoute,
-              );
+              Navigator.pushReplacementNamed(context, OrderScreen.nameRoute);
+              // Navigator.of(context).pushReplacement(
+              //     CustomRoute(builder: (ctx) => OrderScreen()));
             },
           ),
           Divider(),

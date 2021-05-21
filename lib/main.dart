@@ -9,6 +9,7 @@ import './screen/user_manage_screen.dart';
 import './screen/product_edit_screen.dart';
 import './screen/auth_screen.dart';
 import './screen/splah_screen.dart';
+import './helpers/custom_route.dart';
 import './providers/products_provider.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
@@ -59,6 +60,9 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.orange,
               scaffoldBackgroundColor: Color.fromRGBO(255, 255, 230, 1),
               fontFamily: 'Lato',
+              pageTransitionsTheme: PageTransitionsTheme(builders: {
+                TargetPlatform.android: CustomPageTransitionBuilder(),
+              }),
               textTheme: Theme.of(context).textTheme.copyWith(
                     headline1: TextStyle(color: Colors.white),
                   ),
