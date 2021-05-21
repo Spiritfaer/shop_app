@@ -10,13 +10,31 @@ class ProductDetailScreen extends StatelessWidget {
   static const String nameScreen = 'Prodact details';
 
   Widget _buildDetail(BuildContext context, Product product, Function addItem) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Stack(
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          expandedHeight: 250,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle: true,
+            titlePadding: const EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal: 16,
+            ),
+            title: Text(
+              product.title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                shadows: [
+                  Shadow(
+                    color: Theme.of(context).primaryColor,
+                    blurRadius: 2.5,
+                    offset: Offset(0.5, 0.5),
+                  ),
+                ],
+              ),
+            ),
+            background: Stack(
               children: [
                 Container(
                   height: 300,
@@ -30,7 +48,7 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 20,
+                  top: 35,
                   right: 20,
                   child: Icon(
                     product.isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -58,19 +76,29 @@ class ProductDetailScreen extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          child: Text(product.description),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        ElevatedButton(
-          style:
-              ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
-          child: Text('BUY NOW!'),
-          onPressed: () {
-            addItem(product.id, product.price, product.title);
-          },
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Text(product.description),
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 100),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).accentColor),
+                  child: Text('BUY NOW!'),
+                  onPressed: () {
+                    addItem(product.id, product.price, product.title);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -84,9 +112,6 @@ class ProductDetailScreen extends StatelessWidget {
     final Cart cartData = Provider.of<Cart>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(product.title),
-      ),
       body: _buildDetail(
         context,
         product,
