@@ -47,10 +47,14 @@ class _OrderItemState extends State<OrderItem> {
               },
             ),
           ),
-          if (_expanded)
-            Container(
+          AnimatedContainer(
+            constraints: BoxConstraints(
+                maxHeight:
+                    _expanded ? min(prods.length * 20.0 + 10.0, 100.0) : 0),
+            curve: Curves.easeInToLinear,
+            duration: Duration(milliseconds: 300),
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              height: min(prods.length * 20.0 + 10.0, 100.0),
               child: ListView.builder(
                 itemCount: prods.length,
                 itemBuilder: (context, index) {
@@ -73,7 +77,8 @@ class _OrderItemState extends State<OrderItem> {
                   );
                 },
               ),
-            )
+            ),
+          )
         ],
       ),
     );
