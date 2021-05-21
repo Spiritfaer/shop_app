@@ -8,6 +8,7 @@ import './screen/orders_screen.dart';
 import './screen/user_manage_screen.dart';
 import './screen/product_edit_screen.dart';
 import './screen/auth_screen.dart';
+import './screen/splah_screen.dart';
 import './providers/products_provider.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
@@ -63,8 +64,19 @@ class MyApp extends StatelessWidget {
                   ),
             ),
             routes: {
-              MyApp.defRoute: (ctx) =>
-                  auth.isAuth ? ProtuctsOverviewScreen() : AuthScreen(),
+              MyApp.defRoute: (ctx) => auth.isAuth
+                  ? ProtuctsOverviewScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return SplashScreen();
+                        } else {
+                          return AuthScreen();
+                        }
+                      },
+                    ),
               ProtuctsOverviewScreen.nameRoute: (ctx) =>
                   ifAuth(ProtuctsOverviewScreen()),
               ProductDetailScreen.nameRoute: (ctx) =>
